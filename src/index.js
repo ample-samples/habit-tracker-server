@@ -1,7 +1,5 @@
-// Load our .env file
-require('dotenv').config();
 // Load app
-const app = require('./server.js')
+import app from './server.js'
 // Set the port
 const port = process.env.PORT || 4000;
 // Start our API server
