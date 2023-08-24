@@ -20,6 +20,9 @@ app.use(express.urlencoded({ extended: true }));
 import habitsRouter from './routers/habits.js'
 app.use('/habits', habitsRouter);
 
+import userRouter from './routers/users.js'
+app.use('/users', userRouter);
+
 app.get('*', (req, res) => {
   res.status(404).json({
     status: 'fail',
