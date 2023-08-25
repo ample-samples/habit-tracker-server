@@ -1,9 +1,10 @@
 import { Router } from 'express'
-import { getAllHabitsByUser, updateHabitEntry } from '../controllers/habits.js'
+import { getAllHabitsByUser, createHabitEntry, updateHabitEntry } from '../controllers/habits.js'
 
 const habitsRouter = Router()
 
 habitsRouter.get("/", getAllHabitsByUser);
-habitsRouter.post("/", updateHabitEntry);
+habitsRouter.post("/", createHabitEntry);
+habitsRouter.patch("/", updateHabitEntry);
 
 export default habitsRouter

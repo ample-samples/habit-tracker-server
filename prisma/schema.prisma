@@ -23,7 +23,7 @@ model User {
 
 model Habits {
   id         Int    @id @default(autoincrement())
-  date       String
+  date       String @unique
   meditation Int?
   calories   Int?
   sleep      Int?

@@ -38,27 +38,29 @@ const exampleData = {
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
-const extractHabits = ({ date, steps, sleep, calories, meditation }) => ({ date, steps, sleep, calories, meditation })
-
 export const getAllHabitsByUser = async (req, res) => {
-  console.log('getting habits')
-  return res.status(200).json(exampleData.habits)
+  const user = await prisma.user.findUnique({
+    where: {
+      email: "dobebebe"
+    },
+    include: {
+      habits: true
+    }
+  })
+  return res.status(200).json(user.habits)
 }
 
-export const updateHabitEntry = async (req, res) => {
-  const habitDate = req.body.date
-  const userId = req.body.id
+export const createHabitEntry = async (req, res) => {
+  const { date, userId } = req.body
 
   const habitsToUpdate = extractHabits(req.body)
 
   const oldHabits = await prisma.habits.findUnique({
     where: {
-      id: userId,
-      date: habitDate
+      userId,
+      date
     }
   })
-
-  console.log({ oldHabits })
 
   if (!oldHabits) {
     const newHabits = await prisma.habits.create({
@@ -66,7 +68,7 @@ export const updateHabitEntry = async (req, res) => {
         ...habitsToUpdate,
         user: {
           connect: {
-            id: req.body.userId
+            id: userId
           }
         }
       },
@@ -75,7 +77,30 @@ export const updateHabitEntry = async (req, res) => {
   } else {
     return res.send("Habit for date exists")
   }
+}
+
+export const updateHabitEntry = async (req, res) => {
+  console.log("Patching habit")
+  const { date, userId, steps, sleep, calories, meditation } = req.body
+
+  let habitsToUpdate = {}
+
+  if(steps) habitsToUpdate = {...habitsToUpdate, steps: Number(steps)}
+  if(sleep) habitsToUpdate = {...habitsToUpdate, sleep: Number(sleep)}
+  if(calories) habitsToUpdate = {...habitsToUpdate, calories: Number(calories)}
+  if(meditation) habitsToUpdate = {...habitsToUpdate, meditation: Number(meditation)}
+  console.log({habitsToUpdate})
+
+    const newHabits = await prisma.habits.update({
+      where: {
+        date,
+        userId
+      },
+      data: {
+        ...habitsToUpdate,
+      }
+    })
 
 
-
+    return res.json(newHabits)
 }
