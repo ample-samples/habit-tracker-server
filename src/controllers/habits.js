@@ -38,8 +38,44 @@ const exampleData = {
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
-export const getHabits = async (req, res) => {
+const extractHabits = ({ date, steps, sleep, calories, meditation }) => ({ date, steps, sleep, calories, meditation })
+
+export const getAllHabitsByUser = async (req, res) => {
   console.log('getting habits')
   return res.status(200).json(exampleData.habits)
 }
 
+export const updateHabitEntry = async (req, res) => {
+  const habitDate = req.body.date
+  const userId = req.body.id
+
+  const habitsToUpdate = extractHabits(req.body)
+
+  const oldHabits = await prisma.habits.findUnique({
+    where: {
+      id: userId,
+      date: habitDate
+    }
+  })
+
+  console.log({ oldHabits })
+
+  if (!oldHabits) {
+    const newHabits = await prisma.habits.create({
+      data: {
+        ...habitsToUpdate,
+        user: {
+          connect: {
+            id: req.body.userId
+          }
+        }
+      },
+    })
+    return res.json(newHabits)
+  } else {
+    return res.send("Habit for date exists")
+  }
+
+
+
+}
