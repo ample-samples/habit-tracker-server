@@ -23,6 +23,9 @@ app.use('/habits', habitsRouter);
 import userRouter from './routers/users.js'
 app.use('/users', userRouter);
 
+import loginRouter from './routers/login.js'
+app.use('/login', loginRouter);
+
 app.get('*', (req, res) => {
   res.status(404).json({
     status: 'fail',
