@@ -39,14 +39,17 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export const getAllHabitsByUser = async (req, res) => {
+  const { email } = req.body
+  if (!email) return res.status(200).json({message:"an email must be provided", habits: []})
   const user = await prisma.user.findUnique({
     where: {
-      email: "dobebebe"
+      email
     },
     include: {
       habits: true
     }
   })
+  const respContent = user && user.habits
   return res.status(200).json(user.habits)
 }
 
