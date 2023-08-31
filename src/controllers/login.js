@@ -12,13 +12,18 @@ export const login = async (req, res) => {
     }
   })
 
+  if(!user) return res.status(403).json({message:"login unsuccessful", profile: false})
 
-  bcrypt
+  const userProfile = {email: user.email, name: user.name, userId: user.id }
+
+
+  const loginSuccess = await bcrypt
       .compare(password, user.password)
-      .then(res => {
-        console.log(res) // return true
-      })
       .catch(err => console.error(err.message))
-
-  return res.json({message:""})
+  console.log(loginSuccess)
+  console.log(loginSuccess&&user)
+  return res.json({
+    message:loginSuccess ? "login successful" : "incorrect username and/or password",
+    profile: loginSuccess&&userProfile
+  })
 }

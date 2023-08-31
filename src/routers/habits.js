@@ -3,7 +3,7 @@ import { getAllHabitsByUser, createHabitEntry, updateHabitEntry } from '../contr
 
 const habitsRouter = Router()
 
-habitsRouter.get("/", getAllHabitsByUser);
+habitsRouter.post("/user", getAllHabitsByUser);
 habitsRouter.post("/", createHabitEntry);
 habitsRouter.patch("/", updateHabitEntry);
 
