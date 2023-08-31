@@ -49,7 +49,7 @@ export const createHabitEntry = async (req, res) => {
     })
     return res.json(newHabits)
   } else {
-    return res.send("Habit for date exists")
+    return res.json({message: "Habit for date exists"})
   }
 }
 
@@ -74,6 +74,7 @@ export const updateHabitEntry = async (req, res) => {
         ...habitsToUpdate,
       }
     })
+  console.log({newHabits})
 
 
     return res.json(newHabits)
